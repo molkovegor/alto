@@ -1,14 +1,19 @@
 name: Contract Tests
 
 on:
+  workflow_call:
   pull_request:
     paths:
       - 'contracts/**'
       - '.github/workflows/contracts-test.yaml'
+  workflow_dispatch:
 
 jobs:
-  test:
+  contract-tests:
+    name: Contract Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

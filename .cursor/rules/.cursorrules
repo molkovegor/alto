@@ -1,0 +1,199 @@
+# Alto - ERC-4337 Bundler .cursorrules
+
+## Project Overview
+Alto is a TypeScript implementation of the ERC-4337 bundler specification, focused on transaction inclusion reliability. It's a modular, high-performance bundler that supports multiple ERC-4337 versions (0.6, 0.7, 0.8) with chain-specific optimizations.
+
+## Architecture & Module Structure
+
+### Core Modules
+- **`src/cli/`**: CLI entry point, argument parsing, and server setup
+- **`src/rpc/`**: JSON-RPC server implementing ERC-4337 methods (eth_sendUserOperation, etc.)
+- **`src/executor/`**: Bundle creation, submission logic, and transaction execution strategies
+- **`src/mempool/`**: User operation pool management with validation and reputation tracking
+- **`src/store/`**: Storage abstraction layer (Redis or in-memory)
+- **`src/handlers/`**: Chain-specific gas price managers (Arbitrum, Optimism, Mantle)
+- **`src/types/`**: TypeScript type definitions and schemas
+- **`src/utils/`**: Shared utilities, validation helpers, and common functions
+- **`src/receiptCache/`**: Receipt caching implementation (memory/Redis)
+
+### Smart Contracts
+- **`contracts/`**: Foundry-based Solidity contracts for EntryPoint simulations and overrides
+- Supports multiple ERC-4337 versions with dedicated contract implementations
+- Uses Forge for compilation and testing
+
+## Development Guidelines
+
+### Code Style & Formatting
+- Use **Biome** for linting and formatting (configured in `biome.json`)
+- Follow the existing 4-space indentation
+- Use semicolons only when needed
+- Line width: 80 characters
+- Use trailing commas: none
+- Organize imports automatically
+
+### TypeScript Best Practices
+- Use **strict TypeScript** configuration
+- Prefer explicit types over `any` (warn on `any` usage)
+- Use path aliases defined in `tsconfig.json`:
+  - `@alto/cli`, `@alto/executor`, `@alto/mempool`, `@alto/rpc`, `@alto/types`, `@alto/utils`, `@alto/handlers`, `@alto/store`, `@alto/receiptCache`
+- Use `bigint` for all numeric values (gas, wei, etc.)
+- Prefer `Address` type from viem for Ethereum addresses
+- Use proper error handling with custom error types
+
+### ERC-4337 Specific Patterns
+- **UserOperation**: Core data structure for account abstraction transactions
+- **EntryPoint**: Singleton contract for executing UserOperation bundles
+- **Bundler**: Node that bundles and submits UserOperations
+- **Paymaster**: Contract that can sponsor transaction fees
+- **Account**: Smart contract wallet implementation
+
+### Error Handling
+- Use custom error types from `@alto/types`
+- Implement proper RPC error responses with appropriate error codes
+- Handle gas estimation failures gracefully
+- Use try-catch blocks for external RPC calls
+- Log errors with appropriate context
+
+### Gas & Fee Management
+- Always use `bigint` for gas calculations
+- Implement proper gas estimation with safety margins
+- Support different gas price strategies per chain
+- Handle gas price updates and market conditions
+- Use proper pre-verification gas calculations
+
+### Testing Patterns
+- Use **Vitest** for E2E testing
+- Test files in `test/e2e/tests/`
+- Use **prool** for local blockchain instances
+- Test against multiple ERC-4337 versions
+- Mock external dependencies appropriately
+- Use proper test timeouts (60s for tests, 45s for hooks)
+
+### Smart Contract Development
+- Use **Foundry** for Solidity development
+- Follow ERC-4337 specification strictly
+- Implement proper access controls
+- Use assembly optimizations where appropriate
+- Test with multiple Solidity versions (0.8.17, 0.8.23, 0.8.28)
+- Use proper gas optimizations (`--optimize --optimizer-runs 1000000 --via-ir`)
+
+### Performance & Reliability
+- Implement proper caching strategies
+- Use Redis for production storage
+- Handle high transaction volumes
+- Implement proper rate limiting
+- Monitor gas price changes
+- Use proper retry mechanisms for failed transactions
+
+### Security Considerations
+- Validate all UserOperation inputs
+- Implement proper signature verification
+- Handle reentrancy attacks
+- Use proper access controls
+- Validate paymaster signatures
+- Implement proper nonce management
+
+### Configuration Management
+- Use environment variables for configuration
+- Support multiple network configurations
+- Use proper validation schemas (Zod)
+- Implement proper logging levels
+- Support both public and private mempools
+
+### Dependencies & Tools
+- **Package Manager**: pnpm (workspace-based)
+- **Runtime**: Node.js 18+ (ESM modules)
+- **Build Tool**: TypeScript with SWC
+- **Testing**: Vitest + prool + anvil
+- **Linting**: Biome
+- **Blockchain**: viem for Ethereum interactions
+- **Smart Contracts**: Foundry
+- **Storage**: Redis (production) / Memory (development)
+
+### File Organization
+- Group related functionality in modules
+- Use index files for clean exports
+- Keep CLI logic separate from business logic
+- Use proper separation of concerns
+- Implement proper dependency injection
+
+### Documentation
+- Use JSDoc for complex functions
+- Document ERC-4337 specific concepts
+- Keep README files updated
+- Document configuration options
+- Use proper commit messages
+
+### Common Commands
+```bash
+# Development
+pnpm install
+pnpm run build
+pnpm run dev
+pnpm start
+
+# Testing
+pnpm test
+pnpm run test:ci
+
+# Smart Contracts
+pnpm run build:contracts
+
+# Linting & Formatting
+pnpm run lint
+pnpm run format
+```
+
+### Key Dependencies
+- `viem`: Ethereum interactions
+- `yargs`: CLI argument parsing
+- `zod`: Schema validation
+- `@sentry/node`: Error monitoring
+- `dotenv`: Environment configuration
+- `permissionless`: ERC-4337 utilities
+
+## Code Examples
+
+### UserOperation Validation
+```typescript
+import { UserOperation, ValidationErrors } from "@alto/types"
+import { validateUserOperation } from "@alto/utils"
+
+const userOp: UserOperation = { /* ... */ }
+const validation = await validateUserOperation(userOp, entryPoint)
+if (!validation.valid) {
+    throw new RpcError(ValidationErrors.InvalidFields, validation.error)
+}
+```
+
+### Gas Estimation
+```typescript
+import { bigint, scaleBigIntByPercent } from "@alto/utils"
+
+const gasEstimate = await estimateGas(userOp)
+const safeGasLimit = scaleBigIntByPercent(gasEstimate, 110n) // 10% buffer
+```
+
+### Error Handling
+```typescript
+import { RpcError, ValidationErrors } from "@alto/types"
+
+try {
+    // Operation
+} catch (error) {
+    if (error instanceof ValidationError) {
+        throw new RpcError(ValidationErrors.InvalidFields, error.message)
+    }
+    throw error
+}
+```
+
+### Key Conventions
+ - Before starting write code analyze project and installed dependencies - maybe you could reuse something
+ - Follow repository structure and code style, don't introduce new approaches unless they absolutely needed
+ - Ensure code is well-documented with inline comments and updated readme if needed
+
+## Concept of this fork
+We need to support User Operations with zero priority fee to be executed on chain. Incentive payment to builder will be done on smart contract level and this bundler will receive User Operations only from trusted entity.
+
+Remember: This is a critical infrastructure component handling real money and transactions. Always prioritize security, reliability, and proper error handling over convenience.

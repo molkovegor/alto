@@ -8,10 +8,12 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
-  docker-e2e:
-    timeout-minutes: 10
+  e2e-tests:
+    name: E2E Tests
+    timeout-minutes: 15
     runs-on: ubuntu-latest
 
     steps:
