@@ -19,11 +19,11 @@ jobs:
     needs: lint
     secrets: inherit
 
-  # Call E2E tests workflow (runs after contract tests)
+  # Call E2E tests workflow (runs after lint, in parallel with contract tests)
   e2e-tests:
     name: E2E Tests
     uses: ./.github/workflows/e2e.yaml
-    needs: contract-tests
+    needs: lint
     secrets: inherit
 
   # Docker build and push (runs after all tests pass)

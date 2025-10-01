@@ -4,8 +4,7 @@ import {
     type InterfaceReputationManager,
     Mempool,
     Monitor,
-    NullReputationManager,
-    ReputationManager
+    NullReputationManager
 } from "@alto/mempool"
 import { RpcHandler, SafeValidator, Server, UnsafeValidator } from "@alto/rpc"
 import { createMempoolStore } from "@alto/store"
@@ -19,11 +18,7 @@ import { validateAndRefillWallets } from "../executor/senderManager/validateAndR
 import { persistShutdownState, restoreShutdownState } from "./shutDown"
 
 const getReputationManager = (
-    config: AltoConfig
 ): InterfaceReputationManager => {
-    if (config.safeMode) {
-        return new ReputationManager(config)
-    }
     return new NullReputationManager()
 }
 
@@ -212,7 +207,7 @@ export const setupServer = async ({
         metrics,
         gasPriceManager
     })
-    const reputationManager = getReputationManager(config)
+    const reputationManager = getReputationManager()
 
     const eventManager = getEventManager({
         config,

@@ -2,12 +2,6 @@ name: Run E2E Tests
 
 on:
   workflow_call:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:

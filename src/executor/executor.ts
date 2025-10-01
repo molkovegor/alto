@@ -38,6 +38,7 @@ import {
     getUserOpHashes,
     isTransactionUnderpricedError
 } from "./utils"
+import { TracesSamplerValues } from "@opentelemetry/core"
 
 type HandleOpsTxParams = {
     gas: bigint
@@ -203,16 +204,14 @@ export class Executor {
             transactionUnderpricedMultiplier,
             walletClients,
             publicClient,
-            privateEndpointSubmissionAttempts
         } = this.config
 
-        // Use private wallet for configured number of attempts if available, then switch to public
-        const usePrivateEndpoint =
-            walletClients.private &&
-            submissionAttempts < privateEndpointSubmissionAttempts
-        const walletClient = usePrivateEndpoint
-            ? walletClients.private
-            : walletClients.public
+        // Use private wallet if configured, otherwise fail
+        if (!walletClients.private) {
+            throw new Error("Private endpoint (send-transaction-rpc-url) is required but not configured")
+        }
+        
+        const walletClient = walletClients.private
 
         const { entryPoint, userOps, account, gas, nonce } = txParam
 
@@ -258,7 +257,7 @@ export class Executor {
                         },
                         txHash: transactionHash,
                         opHashes: getUserOpHashes(txParam.userOps),
-                        isPrivate: usePrivateEndpoint
+                        isPrivate: true
                     },
                     "submitted bundle transaction"
                 )
