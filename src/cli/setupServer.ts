@@ -17,8 +17,7 @@ import { flushOnStartUp } from "../executor/senderManager/flushOnStartUp"
 import { validateAndRefillWallets } from "../executor/senderManager/validateAndRefill"
 import { persistShutdownState, restoreShutdownState } from "./shutDown"
 
-const getReputationManager = (
-): InterfaceReputationManager => {
+const getReputationManager = (): InterfaceReputationManager => {
     return new NullReputationManager()
 }
 

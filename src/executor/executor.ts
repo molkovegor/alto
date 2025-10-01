@@ -38,7 +38,6 @@ import {
     getUserOpHashes,
     isTransactionUnderpricedError
 } from "./utils"
-import { TracesSamplerValues } from "@opentelemetry/core"
 
 type HandleOpsTxParams = {
     gas: bigint
@@ -203,14 +202,16 @@ export class Executor {
             sendHandleOpsRetryCount,
             transactionUnderpricedMultiplier,
             walletClients,
-            publicClient,
+            publicClient
         } = this.config
 
         // Use private wallet if configured, otherwise fail
         if (!walletClients.private) {
-            throw new Error("Private endpoint (send-transaction-rpc-url) is required but not configured")
+            throw new Error(
+                "Private endpoint (send-transaction-rpc-url) is required but not configured"
+            )
         }
-        
+
         const walletClient = walletClients.private
 
         const { entryPoint, userOps, account, gas, nonce } = txParam
