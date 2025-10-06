@@ -182,9 +182,7 @@ export class Executor {
         // Check if any User Operation in the bundle has zero fees
         const hasZeroFeeUserOp = bundle.userOps.some((userOpInfo) => {
             const userOp = userOpInfo.userOp
-            return (
-                userOp.maxFeePerGas === 0n && userOp.maxPriorityFeePerGas === 0n
-            )
+            return userOp.maxPriorityFeePerGas === 0n
         })
 
         // If any User Operation has zero fees, set priority fee to zero for MEV incentive on smart contract level
