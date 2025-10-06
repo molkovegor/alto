@@ -187,7 +187,7 @@ export class Executor {
 
         // If any User Operation has zero fees, set priority fee to zero for MEV incentive on smart contract level
         const finalMaxPriorityFeePerGas = hasZeroFeeUserOp
-            ? 0n
+            ? 1n
             : networkMaxPriorityFeePerGas
 
         return {
