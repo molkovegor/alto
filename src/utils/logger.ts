@@ -104,12 +104,12 @@ export const initSeqLogger = (
     const baseProperties: Record<string, any> = {
         Component: "Alto-Bundler"
     }
-    
+
     // Add custom properties from seqOptions
     if (seqOptions.property) {
         Object.assign(baseProperties, seqOptions.property)
     }
-    
+
     const l = logger({
         base: baseProperties,
         level: level,
@@ -130,12 +130,12 @@ export const initHybridLogger = (
     const baseProperties: Record<string, any> = {
         Component: "Alto-Bundler"
     }
-    
+
     // Add custom properties from seqOptions
     if (seqOptions?.property) {
         Object.assign(baseProperties, seqOptions.property)
     }
-    
+
     const l = logger({
         base: baseProperties,
         level: level,
@@ -146,6 +146,6 @@ export const initHybridLogger = (
             }
         }
     })
-    
+
     return l
 }
