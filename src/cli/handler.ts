@@ -2,9 +2,9 @@ import { GasPriceManager } from "@alto/handlers"
 import {
     createMetrics,
     initDebugLogger,
+    initHybridLogger,
     initProductionLogger,
-    initSeqLogger,
-    initHybridLogger
+    initSeqLogger
 } from "@alto/utils"
 import type { Logger } from "pino"
 import { Registry } from "prom-client"
@@ -129,12 +129,12 @@ export async function bundlerHandler(args_: IOptionsInput): Promise<void> {
             Component: "Alto-Bundler" // Default component identifier
         }
         if (args.seqProperty) {
-            args.seqProperty.split(",").forEach((prop) => {
+            for (const prop of args.seqProperty.split(",")) {
                 const [key, value] = prop.split("=")
                 if (key && value) {
                     properties[key.trim()] = value.trim()
                 }
-            })
+            }
         }
 
         const seqOptions = {
