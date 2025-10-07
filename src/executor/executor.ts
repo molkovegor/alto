@@ -258,7 +258,7 @@ export class Executor {
                         },
                         txHash: transactionHash,
                         opHashes: getUserOpHashes(txParam.userOps),
-                        isPrivate: true
+                        isPrivate: usePrivateEndpoint
                     },
                     "submitted bundle transaction"
                 )
