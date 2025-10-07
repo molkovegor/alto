@@ -100,23 +100,25 @@ export const initSeqLogger = (
     level: string,
     seqOptions: SeqOptions
 ): Logger => {
+    // Use JSON output that can be piped to pino-seq
+    const baseProperties: Record<string, any> = {
+        Component: "Alto-Bundler"
+    }
+    
+    // Add custom properties from seqOptions
+    if (seqOptions.property) {
+        Object.assign(baseProperties, seqOptions.property)
+    }
+    
     const l = logger({
-        base: undefined,
+        base: baseProperties,
+        level: level,
         formatters: {
             level: logLevel,
             log: customSerializer
-        },
-        transport: {
-            target: "pino-seq",
-            options: {
-                serverUrl: seqOptions.serverUrl,
-                apiKey: seqOptions.apiKey,
-                property: seqOptions.property
-            }
         }
     })
 
-    l.level = level
     return l
 }
 
@@ -124,38 +126,26 @@ export const initHybridLogger = (
     level: string,
     seqOptions?: SeqOptions
 ): Logger => {
-    const transports: any[] = []
-
-    // Always include console output
-    transports.push({
-        target: "pino-pretty",
-        options: {
-            colorize: true
-        }
-    })
-
-    // Add Seq transport if configured
-    if (seqOptions) {
-        transports.push({
-            target: "pino-seq",
-            options: {
-                serverUrl: seqOptions.serverUrl,
-                apiKey: seqOptions.apiKey,
-                property: seqOptions.property
-            }
-        })
+    // Add Seq properties to the logger base
+    const baseProperties: Record<string, any> = {
+        Component: "Alto-Bundler"
     }
-
+    
+    // Add custom properties from seqOptions
+    if (seqOptions?.property) {
+        Object.assign(baseProperties, seqOptions.property)
+    }
+    
     const l = logger({
-        base: undefined,
-        formatters: {
-            level: logLevel,
-            log: customSerializer
-        },
+        base: baseProperties,
+        level: level,
         transport: {
-            targets: transports
+            target: "pino-pretty",
+            options: {
+                colorize: true
+            }
         }
     })
-    l.level = level
+    
     return l
 }
