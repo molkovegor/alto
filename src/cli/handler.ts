@@ -2,8 +2,11 @@ import { GasPriceManager } from "@alto/handlers"
 import {
     createMetrics,
     initDebugLogger,
-    initProductionLogger
+    initProductionLogger,
+    initSeqLogger,
+    initHybridLogger
 } from "@alto/utils"
+import type { Logger } from "pino"
 import { Registry } from "prom-client"
 import {
     type CallParameters,
@@ -118,9 +121,41 @@ const getViemChain = ({
 
 export async function bundlerHandler(args_: IOptionsInput): Promise<void> {
     const args = parseArgs(args_)
-    const logger = args.json
-        ? initProductionLogger(args.logLevel)
-        : initDebugLogger(args.logLevel)
+
+    let logger: Logger
+    if (args.seqServerUrl) {
+        // Parse additional properties from command line
+        const properties: Record<string, any> = {
+            Component: "Alto-Bundler" // Default component identifier
+        }
+        if (args.seqProperty) {
+            args.seqProperty.split(",").forEach((prop) => {
+                const [key, value] = prop.split("=")
+                if (key && value) {
+                    properties[key.trim()] = value.trim()
+                }
+            })
+        }
+
+        const seqOptions = {
+            serverUrl: args.seqServerUrl,
+            apiKey: args.seqApiKey,
+            property: properties
+        }
+
+        if (args.json) {
+            // Production mode: Seq only
+            logger = initSeqLogger(args.logLevel, seqOptions)
+        } else {
+            // Development mode: Console + Seq
+            logger = initHybridLogger(args.logLevel, seqOptions)
+        }
+    } else {
+        // No Seq configuration
+        logger = args.json
+            ? initProductionLogger(args.logLevel)
+            : initDebugLogger(args.logLevel)
+    }
 
     const getChainId = async () => {
         const client = createPublicClient({

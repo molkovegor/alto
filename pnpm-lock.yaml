@@ -149,6 +149,9 @@ importers:
       pino-pretty:
         specifier: ^10.0.0
         version: 10.3.1
+      pino-seq:
+        specifier: ^0.5.0
+        version: 0.5.0
       prom-client:
         specifier: ^14.2.0
         version: 14.2.0
@@ -2804,6 +2807,10 @@ packages:
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
     dev: false
 
+  /@types/events@3.0.3:
+    resolution: {integrity: sha512-trOc4AAUThEz9hapPtSd7wf5tiQKvTtu5b371UxXdTuqzIh0ArcRspRP0i0Viu+LXstIQ1z96t1nsPxT9ol01g==}
+    dev: false
+
   /@types/minimist@1.2.5:
     resolution: {integrity: sha512-hov8bUuiLiyFPGyFPE1lwWhmzYbirOXQNNo40+y3zow8aFVTeyn3VWL0VFFfdNddA8S4Vf0Tc062rzyNr7Paag==}
     dev: true
@@ -2841,6 +2848,13 @@ packages:
       '@types/node': 18.16.3
       pg-protocol: 1.9.5
       pg-types: 2.2.0
+    dev: false
+
+  /@types/pino@5.20.0:
+    resolution: {integrity: sha512-gz3Ahvx1UDEveXViOQtYqnUkjSVQFdoJqpZTW/63spEHwOGRJRJIi3JMJSClp5Sk1x1ljn9tHWjGczmP6s/rvg==}
+    dependencies:
+      '@types/events': 3.0.3
+      '@types/node': 18.16.3
     dev: false
 
   /@types/semver@7.5.8:
@@ -3461,6 +3475,10 @@ packages:
 
   /colorette@2.0.20:
     resolution: {integrity: sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==}
+    dev: false
+
+  /commander@2.20.3:
+    resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
     dev: false
 
   /commander@9.5.0:
@@ -5788,6 +5806,16 @@ packages:
       strip-json-comments: 3.1.1
     dev: false
 
+  /pino-seq@0.5.0:
+    resolution: {integrity: sha512-mf7xl6YNQn9xurqSK+NIYrRge4mysWn8QU1HCajzIbp2pGdWQsVvNJKT6Nn1ZL5JFue9Hy+aYLxwoy716DMPyA==}
+    hasBin: true
+    dependencies:
+      '@types/pino': 5.20.0
+      commander: 2.20.3
+      seq-logging: 0.4.6
+      split2: 3.2.2
+    dev: false
+
   /pino-std-serializers@6.2.2:
     resolution: {integrity: sha512-cHjPPsE+vhj/tnhCy/wiMh3M3z3h/j15zHQX+S9GkTBgqJuTuJzYJ4gUyACLhDaJ7kk9ba9iRDmbH2tJU03OiA==}
     dev: false
@@ -6318,6 +6346,10 @@ packages:
     hasBin: true
     dev: false
 
+  /seq-logging@0.4.6:
+    resolution: {integrity: sha512-cCkhK86q+PfLeC21eaOWBcXyPUROuRq/e9EaJIT1BkmEdTHjvIgViDn7Tgw+tdzFhezvn7buDfoXWD8xPtQfeg==}
+    dev: false
+
   /serialize-javascript@6.0.0:
     resolution: {integrity: sha512-Qr3TosvguFt8ePWqsvRfrKyQXIiW+nGbYpy8XK24NQHE83caxWt+mIymTT19DGFbNWNLfEwsrkSmN64lVWB9ag==}
     dependencies:
@@ -6483,6 +6515,12 @@ packages:
   /spdx-license-ids@3.0.18:
     resolution: {integrity: sha512-xxRs31BqRYHwiMzudOrpSiHtZ8i/GeionCBDSilhYRj+9gIcI8wCZTlXZKu9vZIVqViP3dcp9qE5G6AlIaD+TQ==}
     dev: true
+
+  /split2@3.2.2:
+    resolution: {integrity: sha512-9NThjpgZnifTkJpzTZ7Eue85S49QwpNhZTq6GRJwObb6jnLFNGB7Qm73V5HewTROPyxD0C29xqmaI68bQtV+hg==}
+    dependencies:
+      readable-stream: 3.6.2
+    dev: false
 
   /split2@4.2.0:
     resolution: {integrity: sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==}

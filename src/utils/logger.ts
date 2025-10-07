@@ -89,3 +89,73 @@ export const initProductionLogger = (level: string): Logger => {
     l.level = level
     return l
 }
+
+export interface SeqOptions {
+    serverUrl: string
+    apiKey?: string
+    property?: Record<string, any>
+}
+
+export const initSeqLogger = (
+    level: string,
+    seqOptions: SeqOptions
+): Logger => {
+    const l = logger({
+        base: undefined,
+        formatters: {
+            level: logLevel,
+            log: customSerializer
+        },
+        transport: {
+            target: "pino-seq",
+            options: {
+                serverUrl: seqOptions.serverUrl,
+                apiKey: seqOptions.apiKey,
+                property: seqOptions.property
+            }
+        }
+    })
+
+    l.level = level
+    return l
+}
+
+export const initHybridLogger = (
+    level: string,
+    seqOptions?: SeqOptions
+): Logger => {
+    const transports: any[] = []
+
+    // Always include console output
+    transports.push({
+        target: "pino-pretty",
+        options: {
+            colorize: true
+        }
+    })
+
+    // Add Seq transport if configured
+    if (seqOptions) {
+        transports.push({
+            target: "pino-seq",
+            options: {
+                serverUrl: seqOptions.serverUrl,
+                apiKey: seqOptions.apiKey,
+                property: seqOptions.property
+            }
+        })
+    }
+
+    const l = logger({
+        base: undefined,
+        formatters: {
+            level: logLevel,
+            log: customSerializer
+        },
+        transport: {
+            targets: transports
+        }
+    })
+    l.level = level
+    return l
+}

@@ -686,6 +686,23 @@ export const logOptions: CliCommandOptions<ILogArgsInput> = {
         type: "string",
         choices: ["trace", "debug", "info", "warn", "error", "fatal"],
         require: false
+    },
+    "seq-server-url": {
+        description:
+            "Seq server URL for centralized logging (e.g., http://localhost:5341)",
+        type: "string",
+        require: false
+    },
+    "seq-api-key": {
+        description: "Seq API key for authentication",
+        type: "string",
+        require: false
+    },
+    "seq-property": {
+        description:
+            "Additional properties to add to all logs (format: key=value,key2=value2)",
+        type: "string",
+        require: false
     }
 }
 

@@ -221,7 +221,10 @@ export const logArgsSchema = z.object({
     "mempool-log-level": logLevel.optional(),
     "executor-log-level": logLevel.optional(),
     "reputation-manager-log-level": logLevel.optional(),
-    "nonce-queuer-log-level": logLevel.optional()
+    "nonce-queuer-log-level": logLevel.optional(),
+    "seq-server-url": z.string().url().optional(),
+    "seq-api-key": z.string().optional(),
+    "seq-property": z.string().optional()
 })
 
 export const debugArgsSchema = z.object({
