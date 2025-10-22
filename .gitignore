@@ -15,3 +15,5 @@ Alto-Bruno/
 .vscode/
 .sentryclirc
 src/contracts
+config.json
+config-sepolia.json

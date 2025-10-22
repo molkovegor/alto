@@ -112,11 +112,7 @@ export const initSeqLogger = (
 
     const l = logger({
         base: baseProperties,
-        level: level,
-        formatters: {
-            level: logLevel,
-            log: customSerializer
-        }
+        level: level
     })
 
     return l

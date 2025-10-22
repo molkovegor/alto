@@ -149,7 +149,11 @@ export const executorArgsSchema = z.object({
         .transform((val) => BigInt(val))
         .default("5"),
     "binary-search-max-retries": z.number().int().min(1).default(3),
-    "private-endpoint-submission-attempts": z.number().int().min(0).default(3)
+    "private-endpoint-submission-attempts": z.number().int().min(0).default(3),
+    "max-priority-fee-cap": z
+        .string()
+        .transform((val) => BigInt(val))
+        .default("1")
 })
 
 export const compatibilityArgsSchema = z.object({

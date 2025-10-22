@@ -232,8 +232,8 @@ export async function bundlerHandler(args_: IOptionsInput): Promise<void> {
             ? createWalletClient({
                   transport: fallback(
                       [
-                          createWalletTransport(args.sendTransactionRpcUrl),
-                          createWalletTransport(args.rpcUrl)
+                          createWalletTransport(args.sendTransactionRpcUrl)
+                          //   createWalletTransport(args.rpcUrl)
                       ],
                       { rank: false }
                   ),

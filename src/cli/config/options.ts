@@ -470,6 +470,13 @@ export const executorOptions: CliCommandOptions<IExecutorArgsInput> = {
         type: "number",
         require: false,
         default: 3
+    },
+    "max-priority-fee-cap": {
+        description:
+            "Maximum priority fee per gas for EOA transactions (in wei)",
+        type: "string",
+        require: false,
+        default: "1"
     }
 }
 

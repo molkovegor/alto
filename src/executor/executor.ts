@@ -176,13 +176,13 @@ export class Executor {
         if (bundlingGasPrice > effectiveGasPrice) {
             return {
                 maxFeePerGas: bundlingGasPrice,
-                maxPriorityFeePerGas: 0n // Set 0 tip for EOA transactions
+                maxPriorityFeePerGas: this.config.maxPriorityFeeCap
             }
         }
 
         return {
             maxFeePerGas: networkMaxFeePerGas,
-            maxPriorityFeePerGas: 0n // Set 0 tip for EOA transactions
+            maxPriorityFeePerGas: this.config.maxPriorityFeeCap
         }
     }
 
@@ -202,17 +202,12 @@ export class Executor {
             sendHandleOpsRetryCount,
             transactionUnderpricedMultiplier,
             walletClients,
-            publicClient,
-            privateEndpointSubmissionAttempts
+            publicClient
         } = this.config
 
         // Use private wallet for configured number of attempts if available, then switch to public
-        const usePrivateEndpoint =
-            walletClients.private &&
-            submissionAttempts < privateEndpointSubmissionAttempts
-        const walletClient = usePrivateEndpoint
-            ? walletClients.private
-            : walletClients.public
+        const usePrivateEndpoint = true
+        const walletClient = walletClients.private
 
         const { entryPoint, userOps, account, gas, nonce } = txParam
 
@@ -247,6 +242,9 @@ export class Executor {
                     multiple: this.config.gasLimitRoundingMultiple
                 })
 
+                if (!walletClient) {
+                    throw new Error("Private wallet client is not available")
+                }
                 transactionHash = await walletClient.sendTransaction(request)
 
                 childLogger.info(
